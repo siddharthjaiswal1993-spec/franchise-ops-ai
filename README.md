@@ -6,9 +6,7 @@
 
 ## Why This Repository Exists
 
-This repository captures a strategic point of view on where franchise operations software is heading, how AI-native platforms should be positioned, and how a company like FranConnect can win the next decade of franchise management.
-
-It is designed as an interview-preparation and portfolio artifact for conversations with FranConnect leadership across product, marketing, and GTM functions.
+This repository captures a strategic point of view on where franchise operations software is heading, how AI-native platforms should be positioned, and how the next generation of franchise management software can win the next decade.
 
 ---
 
@@ -42,8 +40,7 @@ The winners will not simply help franchisors manage tasks, audits, documents, an
 | `/gtm` | GTM strategy, ICP, personas, positioning, competitive landscape, marketing, pricing, 90-day plan |
 | `/product` | Product vision, modules, wedge strategy, AI Field Consultant, Location Health Score, all modules |
 | `/ai-native-strategy` | AI use cases, agents, trust governance, differentiation, data strategy |
-| `/interview-prep` | Interview prep for Director of Marketing and VP of Product, Q&A, talking points |
-| `/artifacts` | One-pagers, matrices, demo script, LinkedIn and email templates |
+| `/artifacts` | One-pagers, matrices, demo script, and reusable strategic frameworks |
 | `/diagrams` | Mermaid diagrams: value chain, DETECT-DECIDE-ACT-VERIFY, wedge path, intelligence stack |
 | `/references` | External links, research paper summary, prototype summary |
 
@@ -61,12 +58,11 @@ The winners will not simply help franchisors manage tasks, audits, documents, an
 
 ## How to Use This Repository
 
-- **For interviews:** Start with `/interview-prep` — tailored prep for Director of Marketing and VP of Product roles
 - **For strategic context:** Read `/docs` and `/strategy` in order
 - **For GTM work:** Navigate `/gtm` for ICP, personas, positioning, competitive analysis, and marketing strategy
 - **For product thinking:** Navigate `/product` for module-level strategy and wedge design
 - **For AI strategy:** Navigate `/ai-native-strategy` for use cases, agents, and governance
-- **For quick artifacts:** Navigate `/artifacts` for one-pagers, matrices, templates, and demo scripts
+- **For quick artifacts:** Navigate `/artifacts` for one-pagers, matrices, and demo scripts
 
 ---
 
