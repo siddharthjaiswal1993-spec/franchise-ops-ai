@@ -82,3 +82,18 @@ The winning platform will:
 The primary wedge is the **AI Field Consultant** — the most human-centric, data-rich, and ROI-measurable entry point into franchise operations. This creates the data exhaust to power the **Location Health Score**, which unlocks the **Compliance Copilot**, **Operator Command Center**, and **Executive Intelligence Layer**.
 
 This is the shift from systems of record to systems of intelligence.
+
+---
+
+## What I Built
+
+| Artifact | Description |
+|---|---|
+| Strategic analysis package | Research paper, GTM strategy, product vision, AI-native strategy, and artifacts across 8 folders |
+| Deployed prototype | Lovable prototype at nexus-foresight-hub.lovable.app |
+| Research paper | Published Gamma deck: Beyond Franchise Management Software |
+| Standard portfolio docs | PORTFOLIO_AUDIT, PRODUCT_THESIS, WHAT_I_BUILT, OUTCOME_MODEL, AI_PRODUCT_JUDGMENT |
+
+---
+
+*Independent strategic analysis of the franchise software category.*
