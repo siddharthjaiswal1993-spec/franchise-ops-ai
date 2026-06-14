@@ -1,6 +1,8 @@
 # AI-Native Franchise Operations GTM Strategy
 
-> A strategic GTM, product, and AI-native operating model for franchise operations management platforms like FranConnect, Delightree, and next-generation franchise intelligence systems.
+> GTM strategy, product vision, and location intelligence design for franchise operations platforms — from field consultant workflows to franchisor-level risk detection.
+
+**Status:** Reference Strategy · Lovable prototype included · Independent analysis using public market data and synthetic franchise scenarios
 
 ---
 
@@ -85,6 +87,18 @@ This is the shift from systems of record to systems of intelligence.
 
 ---
 
+## Build / Maintain / Improve / Kill
+
+**Build** — FranConnect/Delightree API integration and real location health data ingestion from POS, compliance, and field visit systems. The Location Health Score is only defensible when it reflects real operational signals, not synthetic scores.
+
+**Maintain** — The full DETECT → DECIDE → ACT → VERIFY loop. The VERIFY step is the most important and the most likely to be cut under time pressure. Without it, there is no feedback signal and no way to prove that interventions worked.
+
+**Improve** — Root cause confidence scoring per location per signal type. The current design surfaces root causes; a production system needs to express how confident it is in each root cause and why, so field consultants can weight them appropriately.
+
+**Kill** — Historical trend reporting without an action recommendation attached. Trend data that does not route to a recommended owner and next step is a dashboard feature, not operational intelligence.
+
+---
+
 ## What I Built
 
 | Artifact | Description |
@@ -96,4 +110,4 @@ This is the shift from systems of record to systems of intelligence.
 
 ---
 
-*Independent strategic analysis of the franchise software category.*
+*Independent strategic analysis of the franchise software category. Uses public market data, IFA industry research, and synthetic franchise scenarios. Not affiliated with FranConnect, Delightree, or any other organisation.*
