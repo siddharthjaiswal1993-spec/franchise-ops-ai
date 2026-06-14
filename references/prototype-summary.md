@@ -6,7 +6,7 @@
 
 ## Product Concept
 
-Nexus Foresight Hub is a working prototype built on the Lovable platform demonstrating the core concepts of an AI-native franchise operational intelligence platform. The prototype was built as a portfolio and interview preparation artifact to make the research paper's strategic concepts tangible and demonstrable in a real product experience.
+Nexus Foresight Hub is a working prototype built on the Lovable platform demonstrating the core concepts of an AI-native franchise operational intelligence platform. The prototype was built to make the research paper's strategic concepts tangible and demonstrable in a real product experience.
 
 The prototype name "Nexus Foresight Hub" references the convergence of multiple operational data sources (Nexus) with predictive operational intelligence (Foresight) in a unified platform view (Hub).
 
@@ -66,11 +66,9 @@ The prototype demonstrates the AI-native strategy through three specific product
 
 ---
 
-## How to Use It in Interviews
+## How to Walk Through the Prototype
 
-The prototype is most effective in interviews when used in two ways:
-
-**As a conversation opener:** "I built a working prototype to demonstrate what I mean by AI-native franchise operational intelligence. May I show you 10 minutes of it?" This immediately differentiates the interview preparation depth.
+The prototype is most effective when used as follows:
 
 **As a demo to structure the DETECT -> DECIDE -> ACT -> VERIFY narrative:** Walking through the prototype in the order described above demonstrates both the strategic framework and the product thinking simultaneously.
 
