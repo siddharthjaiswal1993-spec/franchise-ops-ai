@@ -28,6 +28,7 @@ The winners will not simply help franchisors manage tasks, audits, documents, an
 |---|---|
 | Lovable Prototype | https://nexus-foresight-hub.lovable.app |
 | Research Paper (Gamma) | https://gamma.app/docs/Beyond-Franchise-Management-Software-i6xf9a7046r2kvv |
+| **Unified Operations Intelligence PRD (v1.0)** | [`product/unified-operations-intelligence-prd.md`](product/unified-operations-intelligence-prd.md) — the canonical, versioned product requirements doc: problem, personas, four pillars, data model, Location 360 & Health Score, AI guardrails, agentic FBC workflow, functional/non-functional requirements, governance, phased roadmap, metrics, and risks |
 
 ---
 
@@ -38,8 +39,9 @@ The winners will not simply help franchisors manage tasks, audits, documents, an
 | `/docs` | Market context, value chain, core problems, category evolution, strategic POV |
 | `/strategy` | AI-native thesis, signal-to-action loop, systems of intelligence, moat analysis |
 | `/gtm` | GTM strategy, ICP, personas, positioning, competitive landscape, marketing, pricing, 90-day plan |
-| `/product` | Product vision, modules, wedge strategy, AI Field Consultant, Location Health Score, all modules |
+| `/product` | Product vision, modules, wedge strategy, AI Field Consultant, Location Health Score, all modules, and the canonical `unified-operations-intelligence-prd.md` |
 | `/ai-native-strategy` | AI use cases, agents, trust governance, differentiation, data strategy |
+| `/evals` | AI evaluation framework: golden datasets, test prompts, and metrics baseline for the AI intelligence layer and agentic FBC workflow |
 | `/artifacts` | One-pagers, matrices, demo script, and reusable strategic frameworks |
 | `/diagrams` | Mermaid diagrams: value chain, DETECT-DECIDE-ACT-VERIFY, wedge path, intelligence stack |
 | `/references` | External links, research paper summary, prototype summary |
@@ -60,8 +62,9 @@ The winners will not simply help franchisors manage tasks, audits, documents, an
 
 - **For strategic context:** Read `/docs` and `/strategy` in order
 - **For GTM work:** Navigate `/gtm` for ICP, personas, positioning, competitive analysis, and marketing strategy
-- **For product thinking:** Navigate `/product` for module-level strategy and wedge design
+- **For product thinking:** Navigate `/product` for module-level strategy and wedge design, starting with `unified-operations-intelligence-prd.md` for the current, versioned requirements
 - **For AI strategy:** Navigate `/ai-native-strategy` for use cases, agents, and governance
+- **For AI quality and trust:** Navigate `/evals` for the golden datasets, test prompts, and metrics baseline that back the AI guardrails in the PRD
 - **For quick artifacts:** Navigate `/artifacts` for one-pagers, matrices, and demo scripts
 
 ---

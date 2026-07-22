@@ -1,0 +1,116 @@
+{
+  "dataset": "data-model-resolution-cases",
+  "covers_requirements": ["DM-01", "DM-02", "DM-03", "DM-04", "INT-06", "FR-A3", "FR-A4"],
+  "prd_reference": "product/unified-operations-intelligence-prd.md#7-franchise-native-data-model",
+  "cases": [
+    {
+      "id": "DM-001",
+      "name": "Unambiguous cross-system match resolves automatically",
+      "requirement": "DM-01, FR-A3",
+      "priority": "MUST",
+      "input": {
+        "records": [
+          { "source": "pos", "external_id": "#4471", "address": "8200 NW 12th St, Miami Lakes, FL" },
+          { "source": "reviews", "place_id": "ChIJ...miami_lakes", "address": "8200 NW 12th St, Miami Lakes, FL" },
+          { "source": "internal_ops", "location_code": "FL-1123", "address": "8200 NW 12th St, Miami Lakes, FL" }
+        ]
+      },
+      "expected": {
+        "resolves_to_single_canonical_location": true,
+        "confidence_score": ">= 0.95",
+        "queued_for_human_review": false
+      },
+      "must_not": ["create three separate location records for one physical store"],
+      "grading": { "method": "rubric", "pass_if": "all three source records collapse to one canonical_location_id with high confidence and no human queue entry" }
+    },
+    {
+      "id": "DM-002",
+      "name": "Ambiguous match is queued for human-assisted resolution, not auto-merged",
+      "requirement": "DM-01, FR-A3 acceptance criteria",
+      "priority": "MUST",
+      "input": {
+        "records": [
+          { "source": "pos", "external_id": "#0091", "address": "500 Main St, Springfield" },
+          { "source": "accounting", "entity_name": "Springfield Store 2", "address": "512 Main St, Springfield" }
+        ],
+        "match_confidence": 0.61
+      },
+      "expected": {
+        "below_threshold": true,
+        "queued_for_human_review": true,
+        "auto_merged": false
+      },
+      "must_not": [
+        "auto-merge two records with a confidence score below the resolution threshold",
+        "silently drop one of the ambiguous records instead of queuing it"
+      ],
+      "grading": { "method": "rubric", "pass_if": "the case is routed to human-assisted resolution and neither record is discarded or force-merged" }
+    },
+    {
+      "id": "DM-003",
+      "name": "Source-of-truth rule resolves a metric conflict between two systems",
+      "requirement": "DM-04, INT-06",
+      "priority": "MUST",
+      "input": {
+        "metric": "monthly_revenue",
+        "pos_reported_value": 128500,
+        "accounting_reported_value": 121900,
+        "configured_source_of_truth_for_revenue": "accounting"
+      },
+      "expected": {
+        "displayed_value": 121900,
+        "displayed_source_label": "accounting (source of truth)",
+        "pos_value_shown_as_secondary_or_flagged_discrepancy": true
+      },
+      "must_not": [
+        "display the POS value as the authoritative revenue figure when accounting is configured as source of truth",
+        "average or silently reconcile the two conflicting numbers"
+      ],
+      "grading": { "method": "exact_match", "pass_if": "displayed_value equals the source-of-truth system's value, and the conflict is disclosed rather than hidden" }
+    },
+    {
+      "id": "DM-004",
+      "name": "Ownership hierarchy rollup and row-level visibility",
+      "requirement": "DM-02, DM-03",
+      "priority": "MUST",
+      "input": {
+        "hierarchy": {
+          "brand": "brand-X",
+          "ownership_group": "OG-7",
+          "franchisees": [
+            { "id": "franchisee-A", "locations": ["loc-101", "loc-102"] },
+            { "id": "franchisee-B", "locations": ["loc-103"] }
+          ]
+        },
+        "requesting_user_role": "franchisee",
+        "requesting_user_id": "franchisee-A"
+      },
+      "expected": {
+        "visible_location_ids": ["loc-101", "loc-102"],
+        "visible_financials_for_other_franchisees": false
+      },
+      "must_not": [
+        "return franchisee-B's financial data to a request scoped to franchisee-A",
+        "enforce this restriction only in the UI layer rather than at the data/query layer (DM-03 requires data-layer enforcement)"
+      ],
+      "grading": { "method": "set_match", "pass_if": "returned location set exactly matches franchisee-A's owned locations, with no peer financial data included" }
+    },
+    {
+      "id": "DM-005",
+      "name": "Partial source outage degrades gracefully instead of failing the whole record",
+      "requirement": "INT-04",
+      "priority": "MUST",
+      "input": {
+        "location": "loc-204",
+        "source_sync_status": { "pos": "success", "reviews": "sync_failed_timeout", "internal_ops": "success" }
+      },
+      "expected": {
+        "location_360_still_renders": true,
+        "reviews_sub_score_marked": "unavailable — sync failed",
+        "other_sub_scores_unaffected": true
+      },
+      "must_not": ["fail the entire Location 360 view because one of three sources failed to sync"],
+      "grading": { "method": "rubric", "pass_if": "the profile renders with the failed source clearly flagged and the rest of the data intact" }
+    }
+  ]
+}

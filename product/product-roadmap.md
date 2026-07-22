@@ -1,5 +1,7 @@
 # Product Roadmap: 4-Phase AI-Native Franchise Intelligence
 
+> **Relationship to the PRD:** `unified-operations-intelligence-prd.md` (§14) defines a tighter 4-phase, 0–24 month sequence (Foundation → FBC Intelligence → Close the Loop → Enterprise & Multi-Brand) scoped strictly to the four pillars (integrations, data model, intelligence layer, agentic workflow). This document's phases carry the fuller revenue, persona-unlock, and go-to-market narrative for the same underlying sequence — read the PRD for what ships, this doc for the business case around it.
+
 ---
 
 ## Roadmap Philosophy

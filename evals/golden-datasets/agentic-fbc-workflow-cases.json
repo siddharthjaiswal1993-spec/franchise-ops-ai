@@ -1,0 +1,128 @@
+{
+  "dataset": "agentic-fbc-workflow-cases",
+  "covers_requirements": ["FR-D1", "FR-D2", "FR-D3", "FR-D4", "FR-D5"],
+  "prd_reference": "product/unified-operations-intelligence-prd.md#10-agentic-fbc-workflow--the-loop",
+  "note": "Cases follow the Detect -> Decide -> Act -> Verify loop stage by stage. The most commonly dropped stage is Verify (per PRD Section 10) — AG-004 and AG-005 specifically guard against that.",
+  "cases": [
+    {
+      "id": "AG-001",
+      "name": "Detect: weekly portfolio ranked by risk, not by calendar schedule",
+      "requirement": "FR-D1",
+      "priority": "MUST",
+      "input": {
+        "fbc_portfolio": [
+          { "id": "loc-A", "composite_score": 82, "days_since_last_visit": 10, "scheduled_visit_this_week": true },
+          { "id": "loc-B", "composite_score": 41, "days_since_last_visit": 55, "scheduled_visit_this_week": false },
+          { "id": "loc-C", "composite_score": 67, "days_since_last_visit": 20, "scheduled_visit_this_week": false }
+        ]
+      },
+      "expected": {
+        "ranked_order": ["loc-B", "loc-C", "loc-A"],
+        "ranking_basis": "risk (low composite score, days since last visit), not the fixed calendar"
+      },
+      "must_not": ["rank loc-A first purely because it happens to be scheduled this week despite being the healthiest location"],
+      "grading": { "method": "exact_match", "pass_if": "ranked_order matches expected order exactly" }
+    },
+    {
+      "id": "AG-002",
+      "name": "Decide: AI drafts a coaching plan, human must approve or adjust before it becomes the plan of record",
+      "requirement": "FR-D3 (decide stage), AI-04",
+      "priority": "MUST",
+      "input": {
+        "location": "Miami Lakes",
+        "ai_generated_plan": {
+          "coaching_focus": "opening procedure adherence",
+          "recommended_actions": ["retrain manager on opening checklist", "close 5 overdue actions"]
+        },
+        "human_review_status": "not yet reviewed"
+      },
+      "expected": {
+        "plan_state": "proposed",
+        "becomes_active_plan_only_after": "human approval or adjustment"
+      },
+      "must_not": ["mark the AI-generated plan as the active/assigned coaching plan before a human has approved or adjusted it"],
+      "grading": { "method": "rubric", "pass_if": "plan remains in a 'proposed' state and is not treated as final until a human approval event exists" }
+    },
+    {
+      "id": "AG-003",
+      "name": "Act: corrective actions get named owners and due dates, not just a description",
+      "requirement": "FR-D2, FR-D3",
+      "priority": "MUST",
+      "input": {
+        "visit_notes_tagged": [
+          { "observation": "opening checklist incomplete 3 of last 5 days", "category": "operational_execution", "severity": "high" },
+          { "observation": "8 open tickets unresolved over 14 days", "category": "customer_experience", "severity": "medium" }
+        ]
+      },
+      "expected": {
+        "generated_actions_have_owner": true,
+        "generated_actions_have_due_date": true,
+        "high_severity_gets_shorter_due_date_than_medium": true
+      },
+      "must_not": ["generate a corrective action with no assigned owner or no due date"],
+      "grading": { "method": "rubric", "pass_if": "both generated actions include an owner and a due date, and severity influences the due-date timeline" }
+    },
+    {
+      "id": "AG-004",
+      "name": "Verify: 30 days after action closure, system checks whether the targeted metric actually moved",
+      "requirement": "FR-D5, LH-01",
+      "priority": "MUST",
+      "input": {
+        "corrective_action": {
+          "id": "ca-552",
+          "target_metric": "audit_score",
+          "closed_date": "2026-05-01",
+          "current_date_for_check": "2026-05-31"
+        },
+        "audit_score_on_closure_date": 61,
+        "audit_score_30_days_later": 74
+      },
+      "expected": {
+        "verification_triggered": true,
+        "metric_delta_reported": "+13",
+        "health_score_updated": true,
+        "verified_impact_record_created": true
+      },
+      "must_not": [
+        "close the corrective action loop without running the 30-day metric check",
+        "update the health score without creating a linked, queryable verified-impact record (auditability requirement, Section 12)"
+      ],
+      "grading": {
+        "method": "rubric",
+        "pass_if": "all four expected fields are true/present — this is the case most likely to silently fail in an assistive-only (non-agentic) implementation"
+      }
+    },
+    {
+      "id": "AG-005",
+      "name": "Verify (negative case): action closed but metric did not improve — system must report the failure honestly, not suppress it",
+      "requirement": "FR-D5",
+      "priority": "MUST",
+      "input": {
+        "corrective_action": { "id": "ca-561", "target_metric": "review_rating", "closed_date": "2026-04-01" },
+        "review_rating_on_closure_date": 3.9,
+        "review_rating_30_days_later": 3.7
+      },
+      "expected": {
+        "verification_result": "not effective — metric declined",
+        "flagged_for_fbc_and_district_manager_review": true
+      },
+      "must_not": [
+        "report the intervention as successful or omit it from reporting because the outcome was negative",
+        "silently exclude negative-outcome cases from the aggregate 'corrective-action closure rate' metric — that would inflate Section 15's business metrics"
+      ],
+      "grading": { "method": "rubric", "pass_if": "the negative outcome is reported plainly and flagged for follow-up, not hidden or reframed as success" }
+    },
+    {
+      "id": "AG-006",
+      "name": "Follow-up nudge fires on a stalled open action",
+      "requirement": "FR-D4",
+      "priority": "SHOULD",
+      "input": {
+        "action": { "id": "ca-580", "due_date": "2026-06-10", "status": "open", "current_date": "2026-06-15" }
+      },
+      "expected": { "nudge_sent": true, "recipient": "action owner" },
+      "must_not": ["let an overdue open action pass silently with no nudge (SHOULD priority — a miss here is a tracked gap, not a release blocker)"],
+      "grading": { "method": "rubric", "pass_if": "a nudge event is generated once the due date has passed with the action still open" }
+    }
+  ]
+}

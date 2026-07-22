@@ -1,0 +1,171 @@
+{
+  "dataset": "location-health-score-cases",
+  "covers_requirements": ["LH-01", "LH-02", "LH-03", "LH-04"],
+  "prd_reference": "product/unified-operations-intelligence-prd.md#8-location-360--health-score",
+  "cases": [
+    {
+      "id": "LH-001",
+      "name": "Miami Lakes worked example — routine breakdown vs. onboarding gap",
+      "requirement": "LH-01, LH-02",
+      "priority": "MUST",
+      "input": {
+        "location": "Miami Lakes",
+        "signals": {
+          "sales_trend_pct": -14,
+          "audit_fails_last_90_days": 3,
+          "review_rating_trend": [4.3, 3.8],
+          "open_tickets": 8,
+          "overdue_corrective_actions": 5,
+          "training_completion_pct": 96
+        }
+      },
+      "expected": {
+        "composite_state": "At Risk",
+        "root_cause_diagnosis": "operational-routine breakdown compounded by a customer-experience issue, not a training/onboarding gap",
+        "reasoning_must_reference": ["high training completion rules out skills gap", "repeated audit failures", "falling review rating", "sales decline framed as downstream effect, not primary cause"]
+      },
+      "must_not": [
+        "attribute the decline to staff not being trained",
+        "present the composite score without listing which sub-scores/signals produced it"
+      ],
+      "grading": {
+        "method": "rubric",
+        "pass_if": "output reaches the same root-cause diagnosis as expected.root_cause_diagnosis and every sub-score is traceable to a named source signal (LH-02 decomposability)",
+        "fail_if": "diagnosis contradicts the training-completion signal, or the score is presented as an opaque number with no listed drivers"
+      }
+    },
+    {
+      "id": "LH-002",
+      "name": "Composite + sub-scores roll up to owner and brand",
+      "requirement": "LH-01, FR-B2 acceptance criteria",
+      "priority": "MUST",
+      "input": {
+        "locations": [
+          { "id": "loc-101", "owner": "franchisee-A", "brand": "brand-X", "composite": 58 },
+          { "id": "loc-102", "owner": "franchisee-A", "brand": "brand-X", "composite": 71 },
+          { "id": "loc-103", "owner": "franchisee-B", "brand": "brand-X", "composite": 44 }
+        ]
+      },
+      "expected": {
+        "franchisee_A_rollup": 64.5,
+        "brand_X_rollup": 57.67,
+        "each_location_composite_expandable_to_named_subscores": true
+      },
+      "must_not": [
+        "silently drop a location from a rollup because one sub-score is missing (must degrade gracefully per INT-04, flagging incompleteness instead)"
+      ],
+      "grading": {
+        "method": "exact_or_tolerance",
+        "tolerance_pct": 1,
+        "pass_if": "rollup arithmetic matches within tolerance AND response confirms every underlying composite is expandable to source records"
+      }
+    },
+    {
+      "id": "LH-003",
+      "name": "Benchmark only against comparable locations (like-for-like)",
+      "requirement": "LH-03",
+      "priority": "MUST",
+      "input": {
+        "target_location": { "format": "drive-thru QSR", "market": "suburban Southeast", "age_years": 4 },
+        "candidate_peer_set": [
+          { "id": "peer-1", "format": "drive-thru QSR", "market": "suburban Southeast", "age_years": 5 },
+          { "id": "peer-2", "format": "mall food court QSR", "market": "urban Northeast", "age_years": 1 },
+          { "id": "peer-3", "format": "drive-thru QSR", "market": "suburban Southeast", "age_years": 3 }
+        ]
+      },
+      "expected": {
+        "valid_peer_ids": ["peer-1", "peer-3"],
+        "excluded_peer_ids": ["peer-2"],
+        "exclusion_reason": "different format (mall food court vs. drive-thru), different market type (urban vs. suburban), and outside comparable age band (Year-1 locations have different baselines)"
+      },
+      "must_not": [
+        "include peer-2 in the benchmark set",
+        "produce a percentile rank without disclosing which peer attributes were matched on"
+      ],
+      "grading": {
+        "method": "set_match",
+        "pass_if": "peer set returned equals expected.valid_peer_ids exactly"
+      }
+    },
+    {
+      "id": "LH-004",
+      "name": "Brand-configured sub-score weights override the default",
+      "requirement": "LH-04",
+      "priority": "SHOULD",
+      "input": {
+        "brand_weight_override": {
+          "compliance": 0.30,
+          "revenue_health": 0.15,
+          "profitability": 0.15,
+          "customer_experience": 0.15,
+          "operational_execution": 0.15,
+          "labor": 0.10
+        },
+        "location_subscores": {
+          "revenue_health": 80, "profitability": 75, "customer_experience": 70,
+          "operational_execution": 60, "compliance": 40, "labor": 65
+        }
+      },
+      "expected": {
+        "composite_using_brand_weights": 62.75,
+        "composite_using_default_weights_for_reference": null
+      },
+      "must_not": ["silently fall back to default weights when a brand override is configured"],
+      "grading": {
+        "method": "exact_or_tolerance",
+        "tolerance_pct": 0.5,
+        "pass_if": "composite is computed with the brand's configured weights, not the platform default"
+      }
+    },
+    {
+      "id": "LH-005",
+      "name": "Low data completeness must be flagged, not silently scored as normal",
+      "requirement": "LH-02, AI-02 (confidence)",
+      "priority": "MUST",
+      "input": {
+        "location": "Tempe East",
+        "data_completeness": {
+          "pos": "current, synced 2 hours ago",
+          "reviews": "current",
+          "accounting": "not connected",
+          "internal_ops": "current",
+          "hcm_payroll": "stale, last synced 41 days ago"
+        }
+      },
+      "expected": {
+        "confidence_label": "Low",
+        "flags": ["accounting not connected — profitability sub-score unavailable", "HCM/payroll data stale beyond freshness SLA — labor sub-score unreliable"]
+      },
+      "must_not": [
+        "present a full six-sub-score composite as High confidence when two sources are missing or stale",
+        "fabricate a profitability sub-score when accounting is not connected (must reflect INT-04 graceful degradation, not invention)"
+      ],
+      "grading": {
+        "method": "rubric",
+        "pass_if": "confidence is explicitly labeled Low/Medium and both missing-data conditions are surfaced as flags"
+      }
+    },
+    {
+      "id": "LH-006",
+      "name": "Score trajectory reflects a verified post-intervention outcome",
+      "requirement": "LH-01, FR-D5",
+      "priority": "MUST",
+      "input": {
+        "location": "Miami Lakes",
+        "prior_composite": 58,
+        "corrective_action_closed_date": "2026-06-01",
+        "metrics_30_days_later": { "audit_score_delta": "+9", "review_rating_delta": "+0.3", "sales_trend_delta_pct": "+4" }
+      },
+      "expected": {
+        "new_composite_direction": "improving",
+        "verified_impact_record_created": true,
+        "explanation_must_cite": ["audit_score_delta", "review_rating_delta", "sales_trend_delta_pct"]
+      },
+      "must_not": ["update the composite score without creating a linked verified-impact record"],
+      "grading": {
+        "method": "rubric",
+        "pass_if": "trajectory is marked improving and the explanation cites the specific 30-day deltas, not a generic 'things got better'"
+      }
+    }
+  ]
+}

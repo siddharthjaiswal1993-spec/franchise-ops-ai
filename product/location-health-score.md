@@ -1,5 +1,7 @@
 # Location Health Score: Product Specification
 
+> **Relationship to the PRD:** `unified-operations-intelligence-prd.md` (§8) specifies a tighter, six-sub-score MVP cut of this model (Revenue, Profitability, Customer Experience, Operational Execution, Compliance, Labor) scoped to what Phase 1–2 integrations can actually support. Treat this document as the fuller target-state model as later-phase integrations (accounting, ticketing, payroll) land; treat the PRD as the near-term, shippable spec.
+
 ---
 
 ## Purpose and Strategic Value
