@@ -8,7 +8,7 @@
 
 "Beyond Franchise Management Software" is a strategic analysis making the case that the franchise software market is at a category inflection point — and that the next generation of franchise operations platforms must be built as operational intelligence systems, not workflow management tools.
 
-The paper was written as pre-interview research and portfolio work for conversations with FranConnect leadership about product strategy, GTM positioning, and AI-native franchise operations.
+The paper is an independent strategic analysis of the franchise software category — making the case for why the next generation of franchise operations platforms must be built as operational intelligence systems.
 
 ---
 
